@@ -12,12 +12,12 @@ or ./main <language> <first_name> <last_name>
 ```sh
 ./main vi Tuan Huu Tran
 ```
-Output: Xin chao Tran Huu Tuan
+Output: `Xin chao Tran Huu Tuan`
 
 ```sh
 ./main en Jame Bond
 ```
-Output: Hello dear Jame Bond
+Output: `Hello dear Jame Bond`
 
 ## Result
 ![sample](sample.png)
