@@ -9,38 +9,41 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+type Greeting struct {
+}
+
 func english_formating(argument []string) string {
 	if len(argument) == 2 {
 		first_name := argument[0]
 		last_name := argument[1]
-		return fmt.Sprintf("Hello dear %q %q", first_name, last_name)
+		return fmt.Sprintf("Hello dear %s %s", first_name, last_name)
 	} else if len(argument) == 3 {
 		first_name := argument[0]
 		middle_name := argument[1]
 		last_name := argument[2]
-		return fmt.Sprintf("Hello dear %q %q %q", first_name, middle_name, last_name)
+		return fmt.Sprintf("Hello dear %s %s %s", first_name, middle_name, last_name)
 	} else {
-		return fmt.Sprintf("Hello dear %q", argument[0])
+		return fmt.Sprintf("Hello dear %s", argument[0])
 	}
 }
 
 func vietnamese_foramting(argument []string) string {
 	if len(argument) == 2 {
-		last_name := argument[0]
-		first_name := argument[1]
-		return fmt.Sprintf("Xin chao %q %q", last_name, first_name)
-	} else if len(argument) == 3 {
-		first_name := argument[2]
-		middle_name := argument[1]
 		last_name := argument[1]
-		return fmt.Sprintf("Xin chao %q %q %q", last_name, middle_name, first_name)
+		first_name := argument[0]
+		return fmt.Sprintf("Xin chao %s %s", last_name, first_name)
+	} else if len(argument) == 3 {
+		first_name := argument[0]
+		middle_name := argument[1]
+		last_name := argument[2]
+		return fmt.Sprintf("Xin chao %s %s %s", last_name, middle_name, first_name)
 	} else {
-		return fmt.Sprintf("Xin chao %q", argument[0])
+		return fmt.Sprintf("Xin chao %s", argument[0])
 	}
 }
 
-func detect_language(argument []string, language constants.LANGUAGE) string {
-	switch language {
+func (f Greeting) DetectLanguage(argument []string, language string) string {
+	switch constants.LANGUAGE(language) {
 	case constants.English:
 		return english_formating(argument)
 	case constants.Vietnamese:
@@ -69,9 +72,9 @@ func hello() {
 			if context.NArg() > 0 {
 
 				if language == "vietnamese" {
-					fmt.Printf("Xin chao %q", name)
+					fmt.Printf("Xin chao %s", name)
 				} else {
-					fmt.Printf("Hello dear %q", name)
+					fmt.Printf("Hello dear %s", name)
 				}
 			}
 			return nil
