@@ -1,4 +1,4 @@
-package ex1
+package source
 
 import (
 	"fmt"
@@ -73,8 +73,8 @@ func hello() {
 				} else {
 					fmt.Printf("Hello dear %q", name)
 				}
-				return nil
 			}
+			return nil
 		},
 	}
 	if err := app.Run(os.Args); err != nil {
