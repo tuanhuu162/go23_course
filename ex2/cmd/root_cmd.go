@@ -5,24 +5,27 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "sorter.go [sort_type] [element] [element] ...",
+	Use:   "sorter [sort_type] [element] [element]",
 	Short: "A flexible sorting tool for numeric, string and mixed elements",
-	Long:  `A flexible sorting tool for numeric, string and mixed elements.`,
-	Args:  cobra.MinimumNArgs(1),
+	Long:  `sorter [sort_type] [element] [element] ... A flexible sorting tool for numeric, string and mixed elements.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		var sortType string = args[0]
-		var element []string = args[1:]
-		sortingFactory := SortingFactory{}
-		sorter := sortingFactory.GetSorter(sortType)
-		var finalValue string = sorter.SortElement(element)
-		fmt.Println("Output:", finalValue)
+		fmt.Println("Please use sorter int or sorter string or sorter mixed")
 	},
 }
 
 func Execute() {
+	rootCmd.PersistentFlags().Bool("desc", false, "Sort in descending order")
+	viper.BindPFlag("desc", rootCmd.PersistentFlags().Lookup("desc"))
+	viper.SetDefault("desc", false)
+
+	rootCmd.AddCommand(numericSortCmd)
+	rootCmd.AddCommand(stringSortCmd)
+	rootCmd.AddCommand(mixSortCmd)
+
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

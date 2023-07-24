@@ -1,5 +1,5 @@
 # go23_course
-## Excercise one
+## Excercise 1
 Simple greeting CLI, can convert English name to English/Vietnamese name
 
 ## Usage 

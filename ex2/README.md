@@ -1,23 +1,36 @@
 # go23_course
-## Excercise one
-Simple greeting CLI, can convert English name to English/Vietnamese name
+## Excercise 2
+Simple sorter CLI, can use for sorting element with type Integer, Float, String or mixed type
 
 ## Usage 
+Using this command to get further usage
 ```sh
-./main <language> <first_name> <middle_name> <last_name>
-or ./main <language> <first_name> <last_name>
+./soter --help
 ```
+It will show you the guideline how to use the command
+![usage.png](./docs/usage.png)
 
 ## Sample Usage
 ```sh
-./main vi Tuan Huu Tran
+./sorter int 0 3 2 3 1.2 6 4.5
 ```
-Output: Xin chao Tran Huu Tuan
+Output: `Output: 0 1.2 2 3 3 4.5 6`
 
 ```sh
-./main en Jame Bond
+./sorter string this is a dog say
 ```
-Output: Hello dear Jame Bond
+Output: `Output: a dog is say this`
+
+```sh
+./sorter mix 1 dog say that 2.5 is greater than 4.5
+
+```
+Output: `Output: 1 2.5 4.5 dog greater is say than that`
+
+```sh
+./sorter mix --desc 1 dog say that 2.5 is greater than 4.5
+```
+Output: `Output: 4.5 2.5 1 that than say is greater dog`
 
 ## Result
-![sample](sample.png)
+![result](./docs/result.png)
