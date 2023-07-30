@@ -1,4 +1,4 @@
-package main
+package count_integer
 
 import (
 	"fmt"
@@ -27,7 +27,7 @@ func PublicCountInteger(word string) int {
 	return numberDifferentIntegers(word)
 }
 
-func TryingCountInteger() {
+func main() {
 	word := "a123bc34d8ef34"
 	count := numberDifferentIntegers(word)
 	fmt.Println(count)

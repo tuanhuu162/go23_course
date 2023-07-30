@@ -1,4 +1,4 @@
-package main
+package count_rectangles
 
 import (
 	"fmt"
@@ -10,8 +10,6 @@ func dfs(rectangles *[][]int, i int, j int) int {
 	}
 	(*rectangles)[i][j] = -1
 	dfs(rectangles, i+1, j)
-	dfs(rectangles, i-1, j)
-	dfs(rectangles, i, j-1)
 	dfs(rectangles, i, j+1)
 	return 1
 }
@@ -41,7 +39,7 @@ func PublicCountRectangles(rectangles [][]int) int {
 	return countRectangles(rectangles)
 }
 
-func TryingCountRectangles() {
+func main() {
 	arr := [][]int{
 		{1, 0, 0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0, 0, 0},
