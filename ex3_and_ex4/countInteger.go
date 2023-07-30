@@ -27,7 +27,7 @@ func PublicCountInteger(word string) int {
 	return numberDifferentIntegers(word)
 }
 
-func main() {
+func TryingCountInteger() {
 	word := "a123bc34d8ef34"
 	count := numberDifferentIntegers(word)
 	fmt.Println(count)

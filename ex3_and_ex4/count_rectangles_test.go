@@ -2,8 +2,6 @@ package main
 
 import (
 	"testing"
-
-	"github.com/go23_course/ex3_and_ex4"
 )
 
 func TestCountRectabglesNormalCase(t *testing.T) {
@@ -18,7 +16,7 @@ func TestCountRectabglesNormalCase(t *testing.T) {
 		{0, 0, 0, 0, 0, 0, 1},
 	}
 	expect_result := 5
-	result := ex3_and_ex4.PublicCountRectangles(testInput)
+	result := PublicCountRectangles(testInput)
 	if result != expect_result {
 		t.Errorf("Expect there are %d rectangles, but got %d", expect_result, result)
 	}
@@ -27,7 +25,7 @@ func TestCountRectabglesNormalCase(t *testing.T) {
 func TestCountRectabglesEmptyArray(t *testing.T) {
 	testInput := [][]int{}
 	expect_result := 0
-	result := ex3_and_ex4.PublicCountRectangles(testInput)
+	result := PublicCountRectangles(testInput)
 	if result != expect_result {
 		t.Errorf("Expect there are %d rectangles, but got %d", expect_result, result)
 	}
@@ -41,7 +39,7 @@ func TestCountRectabglesNWithoutRectangle(t *testing.T) {
 		{0, 0, 0, 0, 0, 0, 0},
 	}
 	expect_result := 0
-	result := ex3_and_ex4.PublicCountRectangles(testInput)
+	result := PublicCountRectangles(testInput)
 	if result != expect_result {
 		t.Errorf("Expect there are %d rectangles, but got %d", expect_result, result)
 	}
@@ -59,7 +57,7 @@ func TestCountRectabglesAdjacentCase(t *testing.T) {
 		{0, 0, 0, 0, 0, 0, 1},
 	}
 	expect_result := 4
-	result := ex3_and_ex4.PublicCountRectangles(testInput)
+	result := PublicCountRectangles(testInput)
 	if result != expect_result {
 		t.Errorf("Expect there are %d rectangles, but got %d", expect_result, result)
 	}
