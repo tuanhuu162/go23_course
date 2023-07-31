@@ -1,8 +1,4 @@
-package ex3_countrectangles
-
-import (
-	"fmt"
-)
+package rectangles
 
 func dfs(rectangles *[][]int, i int, j int) int {
 	if i < 0 || j < 0 || i >= len(*rectangles) || j >= len((*rectangles)[0]) || (*rectangles)[i][j] < 1 {
@@ -37,19 +33,4 @@ func countRectangles(rectangles [][]int) int {
 
 func PublicCountRectangles(rectangles [][]int) int {
 	return countRectangles(rectangles)
-}
-
-func main() {
-	arr := [][]int{
-		{1, 0, 0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0},
-		{1, 1, 0, 1, 1, 1, 0},
-		{0, 1, 0, 1, 1, 1, 0},
-		{0, 1, 0, 0, 0, 0, 0},
-		{0, 1, 0, 1, 1, 0, 0},
-		{0, 0, 0, 1, 1, 0, 0},
-		{0, 0, 0, 0, 0, 0, 1},
-	}
-	count := countRectangles(arr)
-	fmt.Println(count)
 }

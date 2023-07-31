@@ -1,7 +1,6 @@
-package ex3_countinteger
+package integer
 
 import (
-	"fmt"
 	"strconv"
 	"unicode"
 )
@@ -25,13 +24,4 @@ func numberDifferentIntegers(word string) int {
 
 func PublicCountInteger(word string) int {
 	return numberDifferentIntegers(word)
-}
-
-func main() {
-	word := "a123bc34d8ef34"
-	count := numberDifferentIntegers(word)
-	fmt.Println(count)
-	word2 := "A1b01c001"
-	count2 := numberDifferentIntegers(word2)
-	fmt.Println(count2)
 }
