@@ -1,4 +1,4 @@
-package count_integer
+package main
 
 import (
 	"fmt"
