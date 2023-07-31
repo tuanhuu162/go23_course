@@ -1,4 +1,4 @@
-package main
+package ex3_countinteger
 
 import (
 	"fmt"
