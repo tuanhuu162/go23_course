@@ -9,7 +9,16 @@ import (
 	"github.com/tuanhuu162/go23_course/ex6/app/storage"
 )
 
-// ListProducts handles GET: http://localhost:8080/products.
+// ListProduct godoc
+//	@Summary	Show all Product we have
+//	@Description
+//	@Tags		products
+//	@Produce	json
+//	@Success	200	{object}	[]models.ProductSerializer
+//	@Failure	400	{object}	string
+//	@Failure	404	{object}	string
+//	@Failure	500	{object}	string
+//	@Router		/products/ [get]
 func ListProducts(ctx iris.Context) {
 	ctx.JSON(iris.Map{
 		"status": http.StatusOK,
@@ -17,7 +26,18 @@ func ListProducts(ctx iris.Context) {
 	})
 }
 
-// createProduct handles POST: http://localhost:8080/products.
+// CreateProduct godoc
+//	@Summary	Create product with name and price
+//	@Description
+//	@Tags		products
+//	@Accept		json
+//	@Produce	json
+//	@Param		product	body		models.Product	true	"Product"
+//	@Success	200		{object}	string
+//	@Failure	400		{object}	string
+//	@Failure	404		{object}	string
+//	@Failure	500		{object}	string
+//	@Router		/products/ [post]
 func CreateProduct(ctx iris.Context) {
 	var product models.Product
 	err := ctx.ReadJSON(&product)
@@ -33,7 +53,17 @@ func CreateProduct(ctx iris.Context) {
 	ctx.JSON(iris.Map{"message": "created"})
 }
 
-// deleteProduct handles DELETE: http://localhost:8080/products/1.
+// DeleteProduct godoc
+//	@Summary	Delete product with id
+//	@Description
+//	@Tags		products
+//	@Produce	json
+//	@Param		product_id	path		int	true	"Product ID"
+//	@Success	200			{object}	string
+//	@Failure	400			{object}	string
+//	@Failure	404			{object}	string
+//	@Failure	500			{object}	string
+//	@Router		/products/{product_id} [delete]
 func DeleteProduct(ctx iris.Context) {
 	product_id, err := ctx.Params().GetUint64("product_id")
 	if err != nil {
@@ -49,7 +79,18 @@ func DeleteProduct(ctx iris.Context) {
 	ctx.JSON(iris.Map{"message": fmt.Sprintf("Deleted product %d", product_id)})
 }
 
-// updateProduct handles PUT: http://localhost:8080/products/1.
+// UpdateProduct godoc
+//	@Summary	Update product with id
+//	@Description
+//	@Tags		products
+//	@Accept		json
+//	@Produce	json
+//	@Param		product	body		models.Product	true	"Product"
+//	@Success	200		{object}	string
+//	@Failure	400		{object}	string
+//	@Failure	404		{object}	string
+//	@Failure	500		{object}	string
+//	@Router		/products/ [put]
 func UpdateProduct(ctx iris.Context) {
 	var product models.Product
 	err := ctx.ReadJSON(&product)

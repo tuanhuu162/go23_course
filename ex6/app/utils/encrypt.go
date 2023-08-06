@@ -1,4 +1,4 @@
-package app
+package utils
 
 import (
 	"crypto/aes"
@@ -13,15 +13,14 @@ func Encode(b []byte) string {
 }
 
 // Encrypt method is to encrypt or hide any classified text
-func Encrypt(text, MySecret string) (string, error) {
+func Encrypt(encoded_string []byte) (string, error) {
 	block, err := aes.NewCipher([]byte(MySecret))
 	if err != nil {
 		return "", err
 	}
-	plainText := []byte(text)
 	cfb := cipher.NewCFBEncrypter(block, []byte(MySecret)[:block.BlockSize()])
-	cipherText := make([]byte, len(plainText))
-	cfb.XORKeyStream(cipherText, plainText)
+	cipherText := make([]byte, len(encoded_string))
+	cfb.XORKeyStream(cipherText, encoded_string)
 	return Encode(cipherText), nil
 }
 
@@ -30,7 +29,7 @@ func Decode(str string) ([]byte, error) {
 }
 
 // Decrypt method is to extract back the encrypted text
-func Decrypt(text, MySecret string) (string, error) {
+func Decrypt(text string) (string, error) {
 	block, err := aes.NewCipher([]byte(MySecret))
 	if err != nil {
 		return "", err
