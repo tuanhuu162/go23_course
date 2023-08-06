@@ -1,24 +1,38 @@
 package storage
 
-// import (
-// 	"github.com/tuanhuu162/go23_course/ex6/app/models"
-// )
+import (
+	"github.com/tuanhuu162/go23_course/ex6/app/models"
+)
 
-// func (c models.Cart) AddItemToCart(product_id string, quantity int64) {
-// 	existingItem, err := c.Items[product_id]
-// 	if err != nil {
-// 		c.Items[product_id] = models.Item{ProductID: product_id, Quantity: quantity}
-// 	} else {
-// 		existingItem.Quantity += quantity
-// 		c.Items[product_id] = existingItem
-// 	}
-// 	c.Total += quantity
-// }
+func AddProductToCart(payload models.CartRequestPayload, cart *models.Cart) error {
+	product, err := GetProduct(payload.ProductID)
+	if err != nil {
+		return err
+	}
+	if item, ok := (*cart).Items[payload.ProductID]; ok {
+		item.Quantity += payload.Quantity
+		(*cart).Items[payload.ProductID] = item
+	} else {
+		(*cart).Items[payload.ProductID] = models.Item{
+			ProductID:   payload.ProductID,
+			ProductName: product.Name,
+			Quantity:    payload.Quantity,
+		}
+	}
+	return nil
+}
 
-// func (c models.Cart) DeleteItemFromCart(id string) {
-// 	delete(c.Items, id)
-// }
-
-// func (c models.Cart) Checkout() (models.Cart, int64) {
-// 	return c, c.Total
-// }
+func DeleteProductFromCart(payload models.CartRequestPayload, cart *models.Cart) error {
+	if _, err := GetProduct(payload.ProductID); err != nil {
+		return err
+	}
+	if item, ok := (*cart).Items[payload.ProductID]; ok {
+		if (*cart).Items[payload.ProductID].Quantity < payload.Quantity {
+			item.Quantity -= payload.Quantity
+			(*cart).Items[payload.ProductID] = item
+		} else {
+			delete((*cart).Items, payload.ProductID)
+		}
+	}
+	return nil
+}

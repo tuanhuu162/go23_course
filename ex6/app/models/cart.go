@@ -1,15 +1,17 @@
 package models
 
 type Cart struct {
-	Items map[string]Item
+	Items map[uint]Item
 	Total int64
 }
 
-type CartRemoveRequestPayload struct {
-	ProductID string `json:"product_id"`
+type Item struct {
+	ProductID   uint   `json:"product_id"`
+	ProductName string `json:"product_name"`
+	Quantity    uint   `json:"quantity"`
 }
 
-type Item struct {
-	ProductID string `json:"product_id"`
-	Quantity  int64  `json:"quantity"`
+type CartRequestPayload struct {
+	ProductID uint `json:"product_id"`
+	Quantity  uint `json:"quantity"`
 }
