@@ -3,11 +3,23 @@ package storage
 import (
 	"fmt"
 
-	"github.com/tuanhuu162/go23_course/ex6/app/models"
+	"github.com/tuanhuu162/go23_course/ex6/carts"
+	"github.com/tuanhuu162/go23_course/ex6/models"
+	productRepo "github.com/tuanhuu162/go23_course/ex6/products/responsitory"
 )
 
-func AddProductToCart(payload models.CartRequestPayload, cart *models.Cart) error {
-	product, err := GetProduct(payload.ProductID)
+type CartRepository struct {
+	pr productRepo.ProductRepository
+}
+
+func NewCartRepository(pr productRepo.ProductRepository) carts.CartRepositoryInterface {
+	return CartRepository{
+		pr: pr,
+	}
+}
+
+func (c *CartRepository) AddProductToCart(payload models.CartRequestPayload, cart *models.Cart) error {
+	product, err := c.pr.GetProduct(payload.ProductID)
 	if err != nil {
 		return err
 	}
@@ -28,8 +40,8 @@ func AddProductToCart(payload models.CartRequestPayload, cart *models.Cart) erro
 	return nil
 }
 
-func DeleteProductFromCart(payload models.CartRequestPayload, cart *models.Cart) error {
-	product, err := GetProduct(payload.ProductID)
+func (c *CartRepository) DeleteProductFromCart(payload models.CartRequestPayload, cart *models.Cart) error {
+	product, err := c.pr.GetProduct(payload.ProductID)
 	if err != nil {
 		return err
 	}

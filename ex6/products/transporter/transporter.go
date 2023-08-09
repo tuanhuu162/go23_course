@@ -1,15 +1,42 @@
-package views
+package transporter
 
 import (
 	"fmt"
 	"net/http"
 
 	"github.com/kataras/iris/v12"
-	"github.com/tuanhuu162/go23_course/ex6/app/models"
-	"github.com/tuanhuu162/go23_course/ex6/app/storage"
+	"github.com/tuanhuu162/go23_course/ex6/models"
+	"github.com/tuanhuu162/go23_course/ex6/products/responsitory"
 )
 
+type ErrorResponse struct {
+	Message string `json:"message"`
+}
+
+type ProductTransportInterface interface {
+	ListProducts(ctx iris.Context)
+	CreateProduct(ctx iris.Context)
+	DeleteProduct(ctx iris.Context)
+	UpdateProduct(ctx iris.Context)
+}
+
+type ProductTransport struct {
+	ProductResponsitory responsitory.ProductResponsitory
+}
+
+func NewProductTransport(r iris.Party, productResponsitory responsitory.ProductResponsitory) {
+	product_transport := &ProductTransport{
+		ProductResponsitory: productResponsitory,
+	}
+	r.Use(iris.Compression)
+	r.Get("/", product_transport.ListProducts)
+	r.Post("/", product_transport.CreateProduct)
+	r.Delete("/{product_id:uint64}", product_transport.DeleteProduct)
+	r.Put("/", product_transport.UpdateProduct)
+}
+
 // ListProduct godoc
+//
 //	@Summary	Show all Product we have
 //	@Description
 //	@Tags		products
@@ -19,14 +46,15 @@ import (
 //	@Failure	404	{object}	string
 //	@Failure	500	{object}	string
 //	@Router		/products/ [get]
-func ListProducts(ctx iris.Context) {
+func (pu *ProductTransport) ListProducts(ctx iris.Context) {
 	ctx.JSON(iris.Map{
 		"status": http.StatusOK,
-		"data":   storage.GetAllProducts(),
+		"data":   pu.ProductResponsitory.GetAllProducts(),
 	})
 }
 
 // CreateProduct godoc
+//
 //	@Summary	Create product with name and price
 //	@Description
 //	@Tags		products
@@ -38,14 +66,15 @@ func ListProducts(ctx iris.Context) {
 //	@Failure	404		{object}	string
 //	@Failure	500		{object}	string
 //	@Router		/products/ [post]
-func CreateProduct(ctx iris.Context) {
+func (pu *ProductTransport) CreateProduct(ctx iris.Context) {
 	var product models.Product
 	err := ctx.ReadJSON(&product)
+
 	if err != nil {
 		ctx.StopWithError(iris.StatusBadRequest, err)
 		return
 	}
-	create_product_err := storage.AddProduct(product)
+	create_product_err := pu.ProductResponsitory.AddProduct(product)
 	if create_product_err != nil {
 		ctx.StopWithJSON(iris.StatusBadRequest, iris.Map{"message": fmt.Sprintf("Error creating product: %s", create_product_err)})
 		return
@@ -54,6 +83,7 @@ func CreateProduct(ctx iris.Context) {
 }
 
 // DeleteProduct godoc
+//
 //	@Summary	Delete product with id
 //	@Description
 //	@Tags		products
@@ -64,14 +94,14 @@ func CreateProduct(ctx iris.Context) {
 //	@Failure	404			{object}	string
 //	@Failure	500			{object}	string
 //	@Router		/products/{product_id} [delete]
-func DeleteProduct(ctx iris.Context) {
+func (pu *ProductTransport) DeleteProduct(ctx iris.Context) {
 	product_id, err := ctx.Params().GetUint64("product_id")
 	if err != nil {
 		ctx.StopWithError(iris.StatusBadRequest, err)
 		return
 	}
 
-	delete_product_error := storage.DeleteProduct(product_id)
+	delete_product_error := pu.ProductResponsitory.DeleteProduct(product_id)
 	if delete_product_error != nil {
 		ctx.StopWithJSON(iris.StatusBadRequest, iris.Map{"message": fmt.Sprintf("Error deleting product %d: %s", product_id, delete_product_error)})
 		return
@@ -80,6 +110,7 @@ func DeleteProduct(ctx iris.Context) {
 }
 
 // UpdateProduct godoc
+//
 //	@Summary	Update product with id
 //	@Description
 //	@Tags		products
@@ -91,14 +122,14 @@ func DeleteProduct(ctx iris.Context) {
 //	@Failure	404		{object}	string
 //	@Failure	500		{object}	string
 //	@Router		/products/ [put]
-func UpdateProduct(ctx iris.Context) {
+func (pu *ProductTransport) UpdateProduct(ctx iris.Context) {
 	var product models.Product
 	err := ctx.ReadJSON(&product)
 	if err != nil {
 		ctx.StopWithError(iris.StatusBadRequest, err)
 		return
 	}
-	update_product_error := storage.UpdateProduct(product)
+	update_product_error := pu.ProductResponsitory.UpdateProduct(product)
 	if update_product_error != nil {
 		ctx.StopWithJSON(iris.StatusBadRequest, iris.Map{"message": fmt.Sprintf("Error updating product %d: %s", product.ID, update_product_error)})
 		return

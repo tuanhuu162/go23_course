@@ -19,11 +19,11 @@ func LoggingMiddleware(ctx iris.Context) {
 	ctx.Next()
 }
 
-func main() {
+func NewApp(database *database.Database) {
 	app := iris.Default()
 
 	// setup Database
-	db, err := database.New()
+	db, err := database.DB, database.Err
 	db.LogMode(true) // show SQL logger
 
 	if err != nil {
@@ -48,16 +48,7 @@ func main() {
 	// setup views
 	productsAPI := app.Party("/products", auth)
 	{
-		productsAPI.Use(iris.Compression)
 
-		// GET: http://localhost:8080/products
-		productsAPI.Get("/", views.ListProducts)
-		// POST: http://localhost:8080/products
-		productsAPI.Post("/", views.CreateProduct)
-		// DELETE: http://localhost:8080/products/1
-		productsAPI.Delete("/{product_id:uint64}", views.DeleteProduct)
-		// PUT: http://localhost:8080/products/1
-		productsAPI.Put("/", views.UpdateProduct)
 	}
 	cartAPI := app.Party("/cart")
 	{
@@ -91,6 +82,9 @@ func main() {
 
 	// setup middleware
 	app.Use(LoggingMiddleware)
+}
 
+func main() {
+	app := api.NewApp()
 	app.Listen(":8080")
 }

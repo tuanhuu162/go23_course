@@ -1,4 +1,4 @@
-package views
+package transporter
 
 import (
 	"encoding/json"
@@ -7,9 +7,9 @@ import (
 
 	"github.com/kataras/iris/v12"
 
-	"github.com/tuanhuu162/go23_course/ex6/app/models"
-	"github.com/tuanhuu162/go23_course/ex6/app/storage"
-	"github.com/tuanhuu162/go23_course/ex6/app/utils"
+	"github.com/tuanhuu162/go23_course/ex6/models"
+	"github.com/tuanhuu162/go23_course/ex6/products"
+	"github.com/tuanhuu162/go23_course/ex6/utils"
 )
 
 func handleCartCookies(ctx iris.Context, processing_function func(models.CartRequestPayload, *models.Cart) error) {
@@ -51,7 +51,28 @@ func handleCartCookies(ctx iris.Context, processing_function func(models.CartReq
 	}
 }
 
+type CartTransportInterface interface {
+	AddProductToCart(ctx iris.Context)
+	DeleteProductFromCart(ctx iris.Context)
+	CheckoutCart(ctx iris.Context)
+}
+
+type CartTransport struct {
+	CartResponsitory products.CartResponsitoryInterface
+}
+
+func NewCartTransport(r iris.Party, cr products.CartResponsitoryInterface) {
+	cart_transport := &CartTransport{
+		CartResponsitory: cr,
+	}
+	r.Use(iris.Compression)
+	r.Post("/add", cart_transport.AddProductToCart)
+	r.Delete("/remove", cart_transport.DeleteProductFromCart)
+	r.Post("/checkout", cart_transport.CheckoutCart)
+}
+
 // AddProductToCart godoc
+//
 //	@Summary	Add product to cart
 //	@Description
 //	@Tags		cart
@@ -63,11 +84,12 @@ func handleCartCookies(ctx iris.Context, processing_function func(models.CartReq
 //	@Failure	404		{object}	string
 //	@Failure	500		{object}	string
 //	@Router		/cart/add [post]
-func AddProductToCart(ctx iris.Context) {
-	handleCartCookies(ctx, storage.AddProductToCart)
+func (ct *CartTransport) AddProductToCart(ctx iris.Context) {
+	handleCartCookies(ctx, ct.CartResponsitory.AddProductToCart)
 }
 
 // DeleteProductFromCart godoc
+//
 //	@Summary	Delete product from cart
 //	@Description
 //	@Tags		cart
@@ -79,11 +101,12 @@ func AddProductToCart(ctx iris.Context) {
 //	@Failure	404		{object}	string
 //	@Failure	500		{object}	string
 //	@Router		/cart/remove [delete]
-func DeleteProductFromCart(ctx iris.Context) {
-	handleCartCookies(ctx, storage.DeleteProductFromCart)
+func (ct *CartTransport) DeleteProductFromCart(ctx iris.Context) {
+	handleCartCookies(ctx, ct.CartResponsitory.DeleteProductFromCart)
 }
 
 // CheckoutCart godoc
+//
 //	@Summary	Checkout cart
 //	@Description
 //	@Tags		cart
@@ -94,7 +117,7 @@ func DeleteProductFromCart(ctx iris.Context) {
 //	@Failure	404	{object}	string
 //	@Failure	500	{object}	string
 //	@Router		/cart/checkout [post]
-func CheckoutCart(ctx iris.Context) {
+func (ct *CartTransport) CheckoutCart(ctx iris.Context) {
 	var cart = models.Cart{}
 	cart_cookie := ctx.GetCookie("cart")
 	if cart_cookie != "" {
