@@ -7,8 +7,8 @@ import (
 
 	"github.com/kataras/iris/v12"
 
+	"github.com/tuanhuu162/go23_course/ex6/carts"
 	"github.com/tuanhuu162/go23_course/ex6/models"
-	"github.com/tuanhuu162/go23_course/ex6/products"
 	"github.com/tuanhuu162/go23_course/ex6/utils"
 )
 
@@ -58,12 +58,12 @@ type CartTransportInterface interface {
 }
 
 type CartTransport struct {
-	CartResponsitory products.CartResponsitoryInterface
+	Cartrepository carts.CartRepositoryInterface
 }
 
-func NewCartTransport(r iris.Party, cr products.CartResponsitoryInterface) {
+func NewCartTransport(r iris.Party, cr carts.CartRepositoryInterface) {
 	cart_transport := &CartTransport{
-		CartResponsitory: cr,
+		Cartrepository: cr,
 	}
 	r.Use(iris.Compression)
 	r.Post("/add", cart_transport.AddProductToCart)
@@ -85,7 +85,7 @@ func NewCartTransport(r iris.Party, cr products.CartResponsitoryInterface) {
 //	@Failure	500		{object}	string
 //	@Router		/cart/add [post]
 func (ct *CartTransport) AddProductToCart(ctx iris.Context) {
-	handleCartCookies(ctx, ct.CartResponsitory.AddProductToCart)
+	handleCartCookies(ctx, ct.Cartrepository.AddProductToCart)
 }
 
 // DeleteProductFromCart godoc
@@ -102,7 +102,7 @@ func (ct *CartTransport) AddProductToCart(ctx iris.Context) {
 //	@Failure	500		{object}	string
 //	@Router		/cart/remove [delete]
 func (ct *CartTransport) DeleteProductFromCart(ctx iris.Context) {
-	handleCartCookies(ctx, ct.CartResponsitory.DeleteProductFromCart)
+	handleCartCookies(ctx, ct.Cartrepository.DeleteProductFromCart)
 }
 
 // CheckoutCart godoc

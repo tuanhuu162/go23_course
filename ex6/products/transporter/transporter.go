@@ -6,7 +6,7 @@ import (
 
 	"github.com/kataras/iris/v12"
 	"github.com/tuanhuu162/go23_course/ex6/models"
-	"github.com/tuanhuu162/go23_course/ex6/products/responsitory"
+	productRepo "github.com/tuanhuu162/go23_course/ex6/products/repository"
 )
 
 type ErrorResponse struct {
@@ -21,12 +21,12 @@ type ProductTransportInterface interface {
 }
 
 type ProductTransport struct {
-	ProductResponsitory responsitory.ProductResponsitory
+	Productrepository productRepo.ProductRepository
 }
 
-func NewProductTransport(r iris.Party, productResponsitory responsitory.ProductResponsitory) {
+func NewProductTransport(r iris.Party, productrepository productRepo.ProductRepository) {
 	product_transport := &ProductTransport{
-		ProductResponsitory: productResponsitory,
+		Productrepository: productrepository,
 	}
 	r.Use(iris.Compression)
 	r.Get("/", product_transport.ListProducts)
@@ -49,7 +49,7 @@ func NewProductTransport(r iris.Party, productResponsitory responsitory.ProductR
 func (pu *ProductTransport) ListProducts(ctx iris.Context) {
 	ctx.JSON(iris.Map{
 		"status": http.StatusOK,
-		"data":   pu.ProductResponsitory.GetAllProducts(),
+		"data":   pu.Productrepository.GetAllProducts(),
 	})
 }
 
@@ -74,7 +74,7 @@ func (pu *ProductTransport) CreateProduct(ctx iris.Context) {
 		ctx.StopWithError(iris.StatusBadRequest, err)
 		return
 	}
-	create_product_err := pu.ProductResponsitory.AddProduct(product)
+	create_product_err := pu.Productrepository.AddProduct(product)
 	if create_product_err != nil {
 		ctx.StopWithJSON(iris.StatusBadRequest, iris.Map{"message": fmt.Sprintf("Error creating product: %s", create_product_err)})
 		return
@@ -101,7 +101,7 @@ func (pu *ProductTransport) DeleteProduct(ctx iris.Context) {
 		return
 	}
 
-	delete_product_error := pu.ProductResponsitory.DeleteProduct(product_id)
+	delete_product_error := pu.Productrepository.DeleteProduct(product_id)
 	if delete_product_error != nil {
 		ctx.StopWithJSON(iris.StatusBadRequest, iris.Map{"message": fmt.Sprintf("Error deleting product %d: %s", product_id, delete_product_error)})
 		return
@@ -129,7 +129,7 @@ func (pu *ProductTransport) UpdateProduct(ctx iris.Context) {
 		ctx.StopWithError(iris.StatusBadRequest, err)
 		return
 	}
-	update_product_error := pu.ProductResponsitory.UpdateProduct(product)
+	update_product_error := pu.Productrepository.UpdateProduct(product)
 	if update_product_error != nil {
 		ctx.StopWithJSON(iris.StatusBadRequest, iris.Map{"message": fmt.Sprintf("Error updating product %d: %s", product.ID, update_product_error)})
 		return

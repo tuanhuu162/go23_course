@@ -1,11 +1,11 @@
-package storage
+package repository
 
 import (
 	"fmt"
 
 	"github.com/tuanhuu162/go23_course/ex6/carts"
 	"github.com/tuanhuu162/go23_course/ex6/models"
-	productRepo "github.com/tuanhuu162/go23_course/ex6/products/responsitory"
+	productRepo "github.com/tuanhuu162/go23_course/ex6/products/repository"
 )
 
 type CartRepository struct {
@@ -13,7 +13,7 @@ type CartRepository struct {
 }
 
 func NewCartRepository(pr productRepo.ProductRepository) carts.CartRepositoryInterface {
-	return CartRepository{
+	return &CartRepository{
 		pr: pr,
 	}
 }
